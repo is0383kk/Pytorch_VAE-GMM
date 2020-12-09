@@ -259,8 +259,6 @@ def train( data, K, num_itr=100, save_dir="model", categories=None, load_dir=Non
     print("GMMの学習メソッド")
     if load_dir is None:
         for it in range(num_itr):
-            if it == 0 or (it+1) % 10 == 0:
-                print(f"GMMの学習:{it+1}回目")
             # メインの処理
             for i in range(N):
                 d = data[i]
@@ -284,6 +282,8 @@ def train( data, K, num_itr=100, save_dir="model", categories=None, load_dir=Non
             for k in range(K):
                 lik += distributions[k].get_loglik()
             liks.append( lik )
+            if it == 0 or (it+1) % 25 == 0:
+                print(f"GMMの学習:{it+1}回目 Lik:{lik}")
 
         for n in range(N):
             for k in range(K):

@@ -1,5 +1,5 @@
 # Variational Auto-Encoder(VAE)+Gaussian mixture model(GMM)
-mplementation of a model to make VAE and GMM learn from each other  
+Implementation of a model to make VAE and GMM learn from each other  
 VAE sends the latent space to GMM  
 GNM sends the parameters of the Gaussian distribution to VAE  
 This is a Graphical Model of VAE-GMM model:  
@@ -14,4 +14,4 @@ The latent space of VAE+GMM for MNIST:
 The latent space of VAE for MNIST:  
 <div>
 	<img src='/image/a.png' width=50%>
-</div>s
+</div>

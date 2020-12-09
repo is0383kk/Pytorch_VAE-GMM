@@ -35,11 +35,11 @@ class VAE(nn.Module):
     def __init__(self):
         super(VAE, self).__init__()
 
-        self.fc1 = nn.Linear(784, 400)
-        self.fc21 = nn.Linear(400, z_dim)
-        self.fc22 = nn.Linear(400, z_dim)
-        self.fc3 = nn.Linear(z_dim, 400)
-        self.fc4 = nn.Linear(400, 784)
+        self.fc1 = nn.Linear(784, 256)
+        self.fc21 = nn.Linear(256, z_dim)
+        self.fc22 = nn.Linear(256, z_dim)
+        self.fc3 = nn.Linear(z_dim, 256)
+        self.fc4 = nn.Linear(256, 784)
         # 事前分布のパラメータを定義
         self.prior_var = nn.Parameter(torch.Tensor(1, z_dim).float().fill_(1.0))
         self.prior_logvar = nn.Parameter(self.prior_var.log())
@@ -87,15 +87,18 @@ class VAE(nn.Module):
         return BCE + KLD
 
 
-def train(gmm_mean, epoch, first, train_loader, send_data_loader, save_dir="./pth/vae.pth"):
+def train(gmm_mean, epoch, first, train_loader, send_data_loader, save_dir="./vae_gmm"):
     prior_mean = torch.Tensor(len(train_loader), z_dim).float().fill_(0.0) # 最初のVAEの事前分布の\mu
     model = VAE().to(device)
+    #loss_list = []
+    #epoch_list = np.arange(epoch)
     if first!=True:
         print("前回の学習パラメータの読み込み")
-        model.load_state_dict(torch.load(save_dir))
+        #model.load_state_dict(torch.load(save_dir))
+    #model.load_state_dict(torch.load(save_dir))
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
     print("VAE内の学習メソッド")
-    for epoch in range(1, epoch + 1):
+    for it in range(epoch):
         model.train()
         train_loss = 0
         for batch_idx, (data, _) in enumerate(train_loader):
@@ -115,15 +118,17 @@ def train(gmm_mean, epoch, first, train_loader, send_data_loader, save_dir="./pt
             #        epoch, batch_idx * len(data), len(train_loader.dataset),
             #        100. * batch_idx / len(train_loader),
             #        loss.item() / len(data)))
+        if it == 0 or (it+1) % 25 == 0:
+            print('====> Epoch: {} Average loss: {:.4f}'.format(
+            it+1, train_loss / len(train_loader.dataset)))
+        #loss_list.append((train_loss / len(train_loader.dataset).numpy()))
+    #np.save('./loss_list.npy', np.array(loss_list))
+    torch.save(model.state_dict(), save_dir+"/vae.pth")
+    return send_latent(send_data_loader=send_data_loader, load_dir=save_dir)
 
-        print('====> Epoch: {} Average loss: {:.4f}'.format(
-            epoch, train_loss / len(train_loader.dataset)))
-    torch.save(model.state_dict(), save_dir)
-    return send_latent(send_data_loader=send_data_loader, load_dir="./pth/vae.pth")
-
-def send_latent(send_data_loader, load_dir="./pth/vae.pth"): # gmmにvaeの潜在空間を送るメソッド
+def send_latent(send_data_loader, load_dir="./vae_gmm"): # gmmにvaeの潜在空間を送るメソッド
     model = VAE().to(device)
-    model.load_state_dict(torch.load(load_dir))
+    model.load_state_dict(torch.load(load_dir+"/vae.pth"))
     model.eval()
     for batch_idx, (data, _) in enumerate(send_data_loader):
         data = data.to(device)
@@ -131,7 +136,7 @@ def send_latent(send_data_loader, load_dir="./pth/vae.pth"): # gmmにvaeの潜�
         z = z.cpu()
     return z.detach().numpy()
 
-def visualize(z, labels, image_name, acc=None):
+def visualize(z, labels, file_name, acc=None):
     colors = ["red", "green", "blue", "orange", "purple", "yellow", "black", "cyan", '#a65628', '#f781bf']
     fig = plt.figure(figsize=(10,10))
     points = TSNE(n_components=2, random_state=0).fit_transform(z)
@@ -144,22 +149,22 @@ def visualize(z, labels, image_name, acc=None):
         plt.ylabel("Latent space:ylabel", fontsize=21)
         plt.tick_params(labelsize=17)
         plt.scatter(p[0], p[1], marker="${}$".format(l),c=colors[l],s=100)
-    plt.savefig('./'+str(image_name)+'.png')
+    plt.savefig(file_name+'./latent_space.png')
     print("画像保存完了")
 
-def plot_latent(send_data_loader, image_name, load_dir="./pth/vae.pth", classes=None):
+def plot_latent(send_data_loader, file_name="./vae_gmm", classes=None):
     print("潜在変数可視化メソッド")
     model = VAE().to(device)
-    model.load_state_dict(torch.load(load_dir))
+    model.load_state_dict(torch.load(file_name+"/vae.pth"))
     model.eval()
     for batch_idx, (data, label) in enumerate(send_data_loader):
         data = data.to(device)
         recon_batch, mu, logvar, z = model(data)
         z = z.cpu()
         if classes is not None:
-            acc, result = gmm_module.calc_acc(label.numpy(),classes)
-            acc = round(acc,2)
-            print(f"acc:{round(acc,2)}")
-            print(f"res:{result}")
-        visualize(z.detach().numpy(), label, image_name, acc=acc)
+            acc, result = gmm_module.calc_acc(classes, label.numpy())
+            #acc = ARI(label.numpy(), classes)
+            acc = round(acc,3)
+            print(f"acc:{round(acc,3)}")
+        visualize(z.detach().numpy(), label, file_name, acc=acc)
         break
