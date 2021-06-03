@@ -9,5 +9,5 @@ This is a Graphical Model of VAE-GMM model:
 </div>
 The definition of each variable is as follows:
 <div>
-	<img src='/image/variable.png' height="420px">
+	<img src='/image/variable_define.png' height="420px">
 </div>
