@@ -21,3 +21,6 @@ Latent space of VAE after mutual learning:
 	<img src='/image/latent_space_vaegmm.png' width="380px">
 </div>
 
+<div>
+	<img src='/image/latent_space_vaegmm.png' width="380px">
+</div>
