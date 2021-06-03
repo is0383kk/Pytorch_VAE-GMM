@@ -22,7 +22,9 @@ Latent space of VAE after mutual learning:
 </div>
 
 ## Image reconstruction from Gaussian distribution parameters estimated by GMM using VAE decoder  
-Figure when a random variable is sampled from the Gaussian distribution of a particular category estimated by GMM（the diagonal component of the covariance matrix is set manually.）:
+Figure when a random variable is sampled from the Gaussian distribution of a particular category estimated by GMM（the diagonal component of the covariance matrix is set manually）  
+The "X" marks are mean parameter for each category  
+Blue circles are sampled random variables  
 <div>
 	<img src='/image/gause_8k_0.png' width="480px">
 </div>
