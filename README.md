@@ -9,14 +9,15 @@ This is a Graphical Model of VAE-GMM model:
 </div>
 The definition of each variable is as follows:
 <div>
-	<img src='/image/variable_define.png' height="420px">
+	<img src='/image/variable_define.png' width="380px">
 </div>
 Latent space of VAE before mutual learning:
 <div>
-	<img src='/image/latent_space_vae.png' height="420px">
+	<img src='/image/latent_space_vae.png' width="380px">
 </div>
 
 Latent space of VAE after mutual learning:
 <div>
-	<img src='/image/latent_space_vaegmm.png' height="420px">
+	<img src='/image/latent_space_vaegmm.png' width="380px">
 </div>
+
