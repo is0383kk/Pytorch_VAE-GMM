@@ -5,5 +5,5 @@ GNM sends the parameters of the Gaussian distribution to VAE
 This is a Graphical Model of VAE-GMM model:  
 
 <div>
-	<img src='/image/model.png'>
+	<img src='/image/model.png',width="320px">
 </div>
