@@ -2,6 +2,7 @@
 Implementation of a model to make VAE and GMM learn from each other.   
 VAE sends x_d to GMM  
 GNM sends the parameters(\mu,\Lambda^{-1}) of the Gaussian distribution to VAE  
+This idea of integrating probability models is based on [this paper](https://arxiv.org/abs/1910.08918)   
 This is a Graphical Model of VAE-GMM model:  
 
 <div>
