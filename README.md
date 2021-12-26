@@ -10,7 +10,10 @@ This is a Graphical Model of VAE+GMM model:
 </div>
 
 # How to run
-You can train the VAE+GMM model by running `main.py`
+You can train the VAE+GMM model by running `main.py`  
+
+You need to have pytorch >= v0.4.1 and cuda drivers installed  
+My environment is the following **Pytorch==1.5.1+cu101, CUDA==10.1**  
 
 
 # Changes with and without mutual learning  
