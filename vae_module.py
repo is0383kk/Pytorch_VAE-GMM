@@ -5,16 +5,13 @@ import torch
 import torch.utils.data
 from torch import nn, optim
 from torch.nn import functional as F
-from torchvision import datasets, transforms
 from torchvision.utils import save_image
-from torch.utils.data.dataset import Subset
 import numpy as np
 import matplotlib.pyplot as plt
 from tool import visualize_ls, sample, get_param
-
-
-
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+
 x_dim=12 # dimention of latent variable
 class VAE(nn.Module):
     def __init__(self):
@@ -25,12 +22,7 @@ class VAE(nn.Module):
         self.fc22 = nn.Linear(256, x_dim)
         self.fc3 = nn.Linear(x_dim, 256)
         self.fc4 = nn.Linear(256, 784)
-        # 事前分布のパラメータN(0,I)で初期化
-        self.prior_var = nn.Parameter(torch.Tensor(1, x_dim).float().fill_(1.0))
-        self.prior_logvar = nn.Parameter(self.prior_var.log())
-        self.prior_var.requires_grad = False
-        self.prior_logvar.requires_grad = False
-
+        
     def encode(self, o_d):
         h1 = F.relu(self.fc1(o_d))
         return self.fc21(h1), self.fc22(h1)
@@ -52,7 +44,7 @@ class VAE(nn.Module):
     # Reconstruction + KL divergence losses summed over all elements and batch
     def loss_function(self, recon_x, o_d, en_mu, en_logvar, gmm_mu, gmm_var, iteration):
         BCE = F.binary_cross_entropy(recon_x, o_d.view(-1, 784), reduction='sum')
-        beta = 5.0
+        
         # see Appendix B from VAE paper:
         # Kingma and Welling. Auto-Encoding Variational Bayes. ICLR, 2014
         # https://arxiv.org/abs/1312.6114 
@@ -99,20 +91,21 @@ def train(iteration, gmm_mu, gmm_var, epoch, train_loader, all_loader, model_dir
             data = data.to(device)
             optimizer.zero_grad()
             recon_batch, mu, logvar, x_d = model(data)
-            if iteration==0:
+            if iteration==0: # when mutual learning first iteration prior is N(0,I)
                 loss = model.loss_function(recon_batch, data, mu, logvar, gmm_mu=None, gmm_var=None, iteration=iteration)
-            else:
+            else: # when mutual learning first iteration prior is N(gmm_mu,gmm_var)
                 loss = model.loss_function(recon_batch, data, mu, logvar, gmm_mu[batch_idx], gmm_var[batch_idx], iteration=iteration)
             loss = loss.mean()
             loss.backward()
             train_loss += loss.item()
             optimizer.step()
-        if i == 0 or (i+1) % 50 == 0:
+        if i == 0 or (i+1) % 50 == 0 or i == (epoch-1):
             print('====> Epoch: {} Average loss: {:.4f}'.format(
             i+1, train_loss / len(train_loader.dataset)))
             
         loss_list[i] = -(train_loss / len(train_loader.dataset))
     
+    # plot loss
     plt.figure()
     plt.plot(range(0,epoch), loss_list, color="blue", label="ELBO")
     if iteration!=0: 
@@ -121,8 +114,10 @@ def train(iteration, gmm_mu, gmm_var, epoch, train_loader, all_loader, model_dir
     plt.xlabel('epoch'); plt.ylabel('ELBO'); plt.legend(loc='lower right')
     plt.savefig(model_dir+'/graph/vae_loss_'+str(iteration)+'.png')
     plt.close()
-    
-    torch.save(model.state_dict(), model_dir+"/pth/vae_"+str(iteration)+".pth")
+    np.save(model_dir+'/npy/loss_'+str(iteration)+'.npy', np.array(loss_list)) # save loss as a .npy 
+    torch.save(model.state_dict(), model_dir+"/pth/vae_"+str(iteration)+".pth") # save model as a .pth 
+
+    # inference of latent variables for all data points
     x_d, label = send_all_z(iteration=iteration, all_loader=all_loader, model_dir=model_dir)
     return x_d, label, loss_list
     
@@ -138,12 +133,11 @@ def decode(iteration, decode_k, sample_num, model_dir="./vae_gmm"):
                      )
     sample_d = manual_sample
     sample_d = torch.from_numpy(sample_d.astype(np.float32)).clone()
-    print(sample_d)
     with torch.no_grad():
         sample_d = sample_d.to(device)
         #sample_d = torch.from_numpy(sample_d).to(device)
         sample_d = model.decode(sample_d).cpu()
-        save_image(sample_d.view(sample_num, 1, 28, 28),'recon/manual_'+str(decode_k)+'.png')
+        save_image(sample_d.view(sample_num, 1, 28, 28),model_dir+'/recon/manual_'+str(decode_k)+'.png')
     
 
 def plot_latent(iteration, all_loader, model_dir="./vae_gmm"): # VAEの潜在空間を可視化するメソッド

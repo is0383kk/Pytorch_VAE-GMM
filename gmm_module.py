@@ -1,5 +1,3 @@
-# 実装の参考元：https://www.anarchive-beta.com/entry/2020/11/28/210948
-# ギブスサンプリング導出の参考元:https://www.anarchive-beta.com/entry/2020/11/18/182943
 import numpy as np
 from scipy.stats import multivariate_normal, wishart, dirichlet 
 import matplotlib.pyplot as plt
@@ -51,8 +49,7 @@ def train(iteration, x_d, label, K, epoch=100, model_dir="vae_gmm"):
         for d in range(D):
             z_dk[d] = np.random.multinomial(n=1, pvals=eta_dk[d], size=1).flatten()
             pred_label.append(np.argmax(z_dk[d]))
-            
-        #sampling loop of \mu, \lambda
+
         for k in range(K):
             beta_hat_k[k] = np.sum(z_dk[:, k]) + beta
             m_hat_kd[k] = np.sum(z_dk[:, k] * x_d.T, axis=1)
@@ -80,7 +77,7 @@ def train(iteration, x_d, label, K, epoch=100, model_dir="vae_gmm"):
         if max_ACC <= ACC[i]:
             max_ACC = ACC[i]
         
-        if i == 0 or (i+1) % 20 == 0:
+        if i == 0 or (i+1) % 20 == 0 or i == (epoch-1):
             print(f"====> Epoch: {i+1}, Accuracy: {ACC[i]}, Max Accuracy: {max_ACC}")
         
 
@@ -90,9 +87,9 @@ def train(iteration, x_d, label, K, epoch=100, model_dir="vae_gmm"):
         var_d[d] = np.diag(np.linalg.inv(lambda_kdd[pred_label[d]]))
         mu_d[d] = mu_kd[pred_label[d]]
     plot(iteration=iteration, epoch=epoch, K=K, acc=ACC, model_dir=model_dir)
-    np.save(model_dir+'/mu_'+str(iteration)+'.npy', mu_kd)
-    np.save(model_dir+'/lambda_'+str(iteration)+'.npy', lambda_kdd)
-    np.save(model_dir+'/pi_'+str(iteration)+'.npy', pi_k)
+    np.save(model_dir+'/npy/mu_'+str(iteration)+'.npy', mu_kd)
+    np.save(model_dir+'/npy/lambda_'+str(iteration)+'.npy', lambda_kdd)
+    np.save(model_dir+'/npy/pi_'+str(iteration)+'.npy', pi_k)
 
     return torch.from_numpy(mu_d), torch.from_numpy(var_d), max_ACC
 
