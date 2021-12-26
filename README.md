@@ -6,7 +6,7 @@ This idea of integrating probability models is based on [this paper](https://arx
 This is a Graphical Model of VAE-GMM model:  
 
 <div>
-	<img src='/image/model.png' height="420px"><img src='/image/variable_define.png' width="380px">
+	<img src='/image/model.png' height="420px"><img src='/image/variable_define.png' width="420px">
 </div>
 
 ## Changes with and without mutual learning  
