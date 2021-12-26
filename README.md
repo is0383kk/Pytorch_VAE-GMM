@@ -12,15 +12,14 @@ The definition of each variable is as follows:
 <div>
 	<img src='/image/variable_define.png' width="380px">
 </div>
+
+## Changes with and without peer learning  
 Latent space of VAE before mutual learning:
 <div>
-	<img src='/image/latent_space_vae.png' width="380px">
+	<img src='/image/latent_space_vae.png' width="380px"><img src='/image/latent_space_vaegmm.png' width="380px">
 </div>
 
-Latent space of VAE after mutual learning:
-<div>
-	<img src='/image/latent_space_vaegmm.png' width="380px">
-</div>
+
 
 <div>
 	<img src='/image/vae_loss_1.png' height="380px">
