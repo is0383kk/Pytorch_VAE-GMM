@@ -13,19 +13,24 @@ The definition of each variable is as follows:
 	<img src='/image/variable_define.png' width="380px">
 </div>
 
-## Changes with and without peer learning  
-Latent space of VAE before mutual learning:
+## Changes with and without mutual learning  
+### Latent space on VAE  
+Left : without mutual learning・Right : with mutual learning  
 <div>
-	<img src='/image/latent_space_vae.png' width="380px"><img src='/image/latent_space_vaegmm.png' width="380px">
+	<img src='/image/z_tsne_0.png' width="380px"><img src='/image/z_tsne_1.png' width="380px">
 </div>
 
-
-
+### ELBO of VAE  
+Red line is ELBO before mutual learning  
+Blue line is ELBO after cross-learning  
+(In general, the higher the ELBO, the better)  
 <div>
 	<img src='/image/vae_loss_1.png' height="380px">
 </div>
 
-
+### Clustering performance (in GMM)  
+Results of clustering performance by accuracy(Addresses clustering performance in GMM within VAE+GMM)  
+Left : without mutual learning・Right : with mutual learning  
 <div>
 	<img src='/image/acc_0.png' height="380px">
 	<img src='/image/acc_1.png' height="380px">
