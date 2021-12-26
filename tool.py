@@ -105,31 +105,28 @@ def visualize_ls(iteration, z, labels, save_dir):
     plt.close()
     #print("画像保存完了")
 
-def calc_ari( results, correct ):
-    K = np.max(results)+1     # カテゴリ数
-    D = len(results)          # データ数
-    max_ari = 0               # 精度の最大値
-    changed = True            # 変化したかどうか
-
+def calc_acc( results, correct ):
+    K = np.max(results)+1     # Number of category
+    D = len(results)          # Number of data points
+    max_acc = 0               # Max acc
+    changed = True
     while changed:
         changed = False
         for i in range(K):
             for j in range(K):
                 tmp_result = np.zeros( D )
 
-                # iとjを入れ替える
                 for n in range(D):
                     if results[n]==i: tmp_result[n]=j
                     elif results[n]==j: tmp_result[n]=i
                     else: tmp_result[n] = results[n]
 
-                # 精度を計算
-                ari = (tmp_result==correct).sum()/float(D)
+                # Caluculate acc
+                acc = (tmp_result==correct).sum()/float(D)
 
-                # 精度が高くなって入れば保存
-                if ari > max_ari:
-                    max_ari = acc
+                if acc > max_acc:
+                    max_acc = acc
                     results = tmp_result
                     changed = True
 
-    return max_ari, results
+    return max_acc, results
