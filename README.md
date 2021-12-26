@@ -9,17 +9,19 @@ This is a Graphical Model of VAE+GMM model:
 	<img src='/image/model.png' height="420px"><img src='/image/variable_define.png' width="420px">
 </div>
 
-[How to run](#anchor1)
+# How to run
+You can train the VAE+GMM model by running `main.py`
 
-## Changes with and without mutual learning  
-### Latent space on VAE  
+
+# Changes with and without mutual learning  
+## Latent space on VAE  
 Left : without mutual learning・Right : with mutual learning  
 <div>
 	<img src='/image/z_tsne_0.png' width="380px"><img src='/image/z_tsne_1.png' width="380px">
 </div>
 
 
-### ELBO of VAE  
+## ELBO of VAE  
 Red line is ELBO before mutual learning, Blue line is ELBO after mutual learning  
 Vertical axis is training iteration of VAE, Horizontal axis is ELBO of VAE  
 (In general, the higher the ELBO, the better)  
@@ -27,7 +29,7 @@ Vertical axis is training iteration of VAE, Horizontal axis is ELBO of VAE
 	<img src='/image/vae_loss_1.png' height="380px">
 </div>
 
-### Clustering performance (in GMM)  
+## Clustering performance (in GMM)  
 Results of clustering performance by accuracy(Addresses clustering performance in GMM within VAE+GMM)  
 Left : without mutual learning・Right : with mutual learning  
 Vertical axis is training iteration of GMM, Horizontal axis is accuracy  
@@ -37,7 +39,7 @@ Vertical axis is training iteration of GMM, Horizontal axis is accuracy
 
 
 
-## Image reconstruction from Gaussian distribution parameters estimated by GMM using VAE decoder  
+# Image reconstruction from Gaussian distribution parameters estimated by GMM using VAE decoder  
 GMM performs clustering on latent variables of VAE. 
 By sampling random variables from posterior distribution estimated by GMM and using them as input to VAE decoder, the image can be reconstructed.  
   
@@ -50,9 +52,6 @@ Reconstructed image of the sampled random variable input to the VAE decoder:
 <div>
 	<img src='/image/manual_1.png' width="380px">
 </div>  
-
-# How to run
-<a id="anchor1"></a>  
 
 
 # Special Thanks  
