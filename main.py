@@ -40,13 +40,13 @@ kwargs = {'num_workers': 1, 'pin_memory': True} if args.cuda else {}
 # データセット分割調整
 trainval_dataset = datasets.MNIST('./../data', train=True, transform=transforms.ToTensor(), download=True)
 n_samples = len(trainval_dataset) 
-train_size = int(n_samples * 0.1) # 6000枚
-#train_size = int(n_samples * 0.01) # 600枚
+train_size = int(n_samples * 1/6) # 10000
+#train_size = int(n_samples * 0.01) # 600
 print(f"Number of training datasets :{train_size}")
 subset1_indices = list(range(0,train_size)); subset2_indices = list(range(train_size,n_samples)) 
 train_dataset = Subset(trainval_dataset, subset1_indices); val_dataset = Subset(trainval_dataset, subset2_indices)
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=1, shuffle=False) # 訓練用ローダ（１枚づつ）
-all_loader = torch.utils.data.DataLoader(train_dataset, batch_size=train_size, shuffle=False) # データセット総数分のローダ
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=10, shuffle=False) # The larger the batch size, the harder it is to train with GMM.
+all_loader = torch.utils.data.DataLoader(train_dataset, batch_size=train_size, shuffle=False) # to send latent variable of VAE to GMM, so load alldata
 
 import vae_module
 import gmm_module
@@ -54,32 +54,48 @@ import gmm_module
 
 
 def train_model(mutual_iteration, dir_name, train_loader, all_loader):
-    N = 1 # 試行回数（相互学習の回数とは別）
-    ARI_list = np.zeros((mutual_iteration,N))
+    N = 1 # Trial
+    ACC_list = np.zeros((mutual_iteration,N))
     for n in range(N):
-        print(f"================={n+1}試行=================")
+        print(f"=================Trial:{n+1}=================")
         for it in range(mutual_iteration):
-            print(f"------------------相互学習{it+1}回目------------------")
-            if it == 0: # VAE->GMMモデル
+            print(f"------------------Mutual learning:{it+1}------------------")
+            if it == 0: # VAE->GMM
+                # During the first iteration of mutual learning, 
+                # VAE assumes a standard normal distribution for the prior distribution.
                 gmm_mu = None; gmm_var = None
             
-            # VAEモジュール
+            """
+            VAE
+            x_d:latent variable of VAE
+            label : MNIST label
+            """
             x_d, label, loss_list = vae_module.train(
-                iteration=it, gmm_mu=gmm_mu, gmm_var=gmm_var,
-                epoch=100, train_loader=train_loader, all_loader=all_loader, 
-                model_dir=dir_name
+                iteration=it, # current iteration
+                gmm_mu=gmm_mu, # mu prameter estimated by GMM as the parameter of the prior distribution of VAE
+                gmm_var=gmm_var, # var prameter estimated by GMM as the parameter of the prior distribution of VAE
+                epoch=50, # training iteration of VAE
+                train_loader=train_loader, # train loader of VAE
+                all_loader=all_loader, # loader used to send latent variables to GMM
+                model_dir=dir_name 
                 )
-            
-            # GMMモジュール    
-            gmm_mu, gmm_var, max_ARI = gmm_module.train(
-                iteration=it, x_d=x_d,
+            """
+            # GMM 
+            gmm_mu:mu prameter estimated by GMM and send VAE
+            gmm_var:variance prameter estimated by GMM and send VAE
+            """
+            gmm_mu, gmm_var, max_ACC = gmm_module.train(
+                iteration=it, # current iteration
+                x_d=x_d, # latent variables sent from VAE
                 model_dir=dir_name,
-                label=label, K=10, epoch=100, 
+                label=label, #label : MNIST label. used to calculate the accuracy
+                K=10, # number of categories (MNIST is composed of 10 categories from 0 to 9)
+                epoch=50, # training iteration of GMM
                 )
             vae_module.plot_latent(iteration=it, all_loader=all_loader, model_dir=dir_name)
-            ARI_list[it][n]=max_ARI
+            ACC_list[it][n]=max_ACC
         
-        print(f"ARI_mean :{np.mean(ARI_list, axis=1)}")
+        print(f"ARI_mean :{np.mean(ACC_list, axis=1)}")
 
 def plot_dist(load_iteration, decode_k, sample_num, dir_name):
     visualize_gmm(iteration=load_iteration, decode_k=decode_k, sample_num=sample_num, model_dir=dir_name)
@@ -88,7 +104,7 @@ def decode_from_gmm_param(iteration, decode_k, sample_num, model_dir="./vae_gmm"
     vae_module.decode(iteration=iteration, decode_k=decode_k, sample_num=sample_num, model_dir=model_dir)
 
 def main():
-    train_model(mutual_iteration=10, dir_name=dir_name, train_loader=train_loader, all_loader=all_loader)
+    train_model(mutual_iteration=2, dir_name=dir_name, train_loader=train_loader, all_loader=all_loader)
     load_iteration = 8 # 読み込むイテレーション.
     decode_k = 0 # 読み込むカテゴリ.
     #plot_dist(load_iteration=load_iteration, decode_k=decode_k, sample_num=32, dir_name=dir_name)
