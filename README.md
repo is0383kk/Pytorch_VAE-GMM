@@ -1,9 +1,9 @@
 # Variational Auto-Encoder(VAE)+Gaussian mixture model(GMM)
 Implementation of a model to make VAE and GMM learn from each other.   
 VAE sends x_d to GMM  
-GNM sends the parameters(\mu,\Lambda^{-1}) of the Gaussian distribution to VAE  
+GNM sends mean and variance parameters of the Gaussian distribution to VAE  
 This idea of integrating probability models is based on [this paper](https://arxiv.org/abs/1910.08918)   
-This is a Graphical Model of VAE-GMM model:  
+This is a Graphical Model of VAE+GMM model:  
 
 <div>
 	<img src='/image/model.png' height="420px"><img src='/image/variable_define.png' width="420px">
@@ -17,8 +17,8 @@ Left : without mutual learning・Right : with mutual learning
 </div>
 
 ### ELBO of VAE  
-Red line is ELBO before mutual learning  
-Blue line is ELBO after cross-learning  
+Red line is ELBO before mutual learning, Blue line is ELBO after mutual learning  
+Vertical axis is training iteration of VAE, Horizontal axis is ELBO of VAE  
 (In general, the higher the ELBO, the better)  
 <div>
 	<img src='/image/vae_loss_1.png' height="380px">
@@ -27,6 +27,7 @@ Blue line is ELBO after cross-learning
 ### Clustering performance (in GMM)  
 Results of clustering performance by accuracy(Addresses clustering performance in GMM within VAE+GMM)  
 Left : without mutual learning・Right : with mutual learning  
+Vertical axis is training iteration of GMM, Horizontal axis is accuracy  
 <div>
 	<img src='/image/acc_0.png' height="380px">
 	<img src='/image/acc_1.png' height="380px">
@@ -35,16 +36,20 @@ Left : without mutual learning・Right : with mutual learning
 
 
 ## Image reconstruction from Gaussian distribution parameters estimated by GMM using VAE decoder  
-Figure when a random variable is sampled from the Gaussian distribution of a particular category estimated by GMM（the diagonal component of the covariance matrix is set manually）  
-The "X" marks are mean parameter for each category  
-Blue circles are sampled random variables  
+GMM performs clustering on latent variables of VAE. 
+By sampling random variables from posterior distribution estimated by GMM and using them as input to VAE decoder, the image can be reconstructed.  
+  
+"x" represents the mean parameter of the normal distribution for each cluster.  
+In this example, a random variable is sampled from a Gaussian distribution with K=1.
 <div>
-	<img src='/image/gause_8k_0.png' width="480px">
+	<img src='/image/gause_I0k1.png' width="480px">
 </div>
 Reconstructed image of the sampled random variable input to the VAE decoder:
 <div>
-	<img src='/image/manual_0.png' width="380px">
+	<img src='/image/manual_1.png' width="380px">
 </div>  
+
+# How to run
 
 # Special Thanks  
 
