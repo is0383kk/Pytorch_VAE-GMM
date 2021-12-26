@@ -29,8 +29,7 @@ Results of clustering performance by accuracy(Addresses clustering performance i
 Left : without mutual learning・Right : with mutual learning  
 Vertical axis is training iteration of GMM, Horizontal axis is accuracy  
 <div>
-	<img src='/image/acc_0.png' height="380px">
-	<img src='/image/acc_1.png' height="380px">
+	<img src='/image/acc_0.png' height="380px"><img src='/image/acc_1.png' height="380px">
 </div>
 
 
