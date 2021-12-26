@@ -23,13 +23,13 @@ Latent space of VAE after mutual learning:
 </div>
 
 <div>
-	<img src='/image/vae_loss_1.png' height="250px">
+	<img src='/image/vae_loss_1.png' height="380px">
 </div>
 
 
 <div>
-	<img src='/image/acc0.png' height="250px">
-	<img src='/image/acc1.png' height="250px">
+	<img src='/image/acc_0.png' height="380px">
+	<img src='/image/acc_1.png' height="380px">
 </div>
 
 
