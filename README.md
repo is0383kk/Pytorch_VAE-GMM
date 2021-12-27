@@ -1,6 +1,6 @@
 # Variational Auto-Encoder(VAE)+Gaussian mixture model(GMM)
 Implementation of a model to make VAE and GMM learn from each other.   
-VAE sends x_d to GMM  
+VAE sends latent variables to GMM  
 GNM sends mean and variance parameters of the Gaussian distribution to VAE  
 This idea of integrating probability models is based on [this paper](https://arxiv.org/abs/1910.08918)   
 This is a Graphical Model of VAE+GMM model:  
