@@ -11,6 +11,23 @@ This is a Graphical Model of VAE+GMM model:
 
 # How to run
 You can train the VAE+GMM model by running `main.py`  
+- `train_model()` can be made to train VAE+GMM  
+- `decode_from_gmm_param()` makes image reconstruction from parameters of posterior distribution estimated by GMM
+```python
+def main():
+    # training VAE+GMM model
+    train_model(mutual_iteration=2, # The number of mutual learning
+                dir_name=dir_name, 
+                train_loader=train_loader, # Dataloader for training
+                all_loader=all_loader) # Dataloader when inference latent variables for all data points
+    
+    # reconstruct image
+    load_iteration = 1 # Which iteration of the mutual learning model to load
+    decode_from_gmm_param(iteration=load_iteration, 
+                          decode_k=1, # The cluster number of the Gaussian distribution to be used as input for decoder.
+                          sample_num=16, # The number of samples for the random variable.
+                          model_dir=dir_name)
+```
 
 You need to have pytorch >= v0.4.1 and cuda drivers installed  
 My environment is the following **Pytorch==1.5.1+cu101, CUDA==10.1**  
