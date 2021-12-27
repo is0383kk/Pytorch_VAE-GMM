@@ -80,5 +80,5 @@ Reconstructed image of the sampled random variable input to the VAE decoder:
 
 
 # Special Thanks  
-
+The implementation of GMM is based on 
 [【Python】4.4.2：ガウス混合モデルにおける推論：ギブスサンプリング【緑ベイズ入門のノート】](https://www.anarchive-beta.com/entry/2020/11/28/210948)
