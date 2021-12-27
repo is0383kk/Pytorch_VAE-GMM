@@ -13,7 +13,7 @@ This is a Graphical Model of VAE+GMM model:
 You can train the VAE+GMM model by running `main.py`  
 - `train_model()` can be made to train VAE+GMM  
 - `decode_from_gmm_param()` makes image reconstruction from parameters of posterior distribution estimated by GMM
-```python
+```python:main.py
 def main():
     # training VAE+GMM model
     train_model(mutual_iteration=2, # The number of mutual learning
