@@ -36,8 +36,13 @@ My environment is the following **Pytorch==1.5.1+cu101, CUDA==10.1**
 # Changes with and without mutual learning  
 ## Latent space on VAE  
 Left : without mutual learning・Right : with mutual learning  
+Plot using TSNE  
 <div>
 	<img src='/image/z_tsne_0.png' width="380px"><img src='/image/z_tsne_1.png' width="380px">
+</div>
+Plot using PCA  
+<div>
+	<img src='/image/z_pca_0.png' width="380px"><img src='/image/z_pca_1.png' width="380px">
 </div>
 
 
