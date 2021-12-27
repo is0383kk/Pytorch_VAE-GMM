@@ -33,7 +33,7 @@ You need to have pytorch >= v0.4.1 and cuda drivers installed
 My environment is the following **Pytorch==1.5.1+cu101, CUDA==10.1**  
 
 
-# Changes with and without mutual learning  
+# Changes with and without mutual learning (for MNIST)  
 ## Latent space on VAE  
 Left : without mutual learning・Right : with mutual learning  
 Plot using TSNE  
