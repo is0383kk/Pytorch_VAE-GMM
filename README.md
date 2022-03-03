@@ -2,8 +2,8 @@
 Implementation of mutual learning model between VAE and GMM.  
 This idea of integrating probability models is based on this paper: [Neuro-SERKET: Development of Integrative Cognitive System through the Composition of Deep Probabilistic Generative Models](https://arxiv.org/abs/1910.08918)  
 Symbol Emergence in Robotics tool KIT（SERKET） is a framework that allows integration and partitioning of probabilistic generative models.  
-Integrate VAE and GMM based on the SERKET concept.  
-This is a Graphical Model of VAE+GMM model.:  
+
+This is a Graphical Model of VAE+GMM model:  
 
 <div>
 	<img src='/image/model.png' height="420px"><img src='/image/variable_define.png' width="420px">
