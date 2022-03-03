@@ -1,13 +1,22 @@
 # Variational Auto-Encoder(VAE)+Gaussian mixture model(GMM)
-Implementation of a model to make VAE and GMM learn from each other.   
-VAE sends latent variables to GMM  
-GNM sends mean and variance parameters of the Gaussian distribution to VAE  
-This idea of integrating probability models is based on [this paper](https://arxiv.org/abs/1910.08918)   
-This is a Graphical Model of VAE+GMM model:  
+Implementation of mutual learning model between VAE and GMM.  
+This idea of integrating probability models is based on this paper: [Neuro-SERKET: Development of Integrative Cognitive System through the Composition of Deep Probabilistic Generative Models](https://arxiv.org/abs/1910.08918)
+Symbol Emergence in Robotics tool KIT（SERKET） is a framework that allows integration and partitioning of probabilistic generative models.  
+Integrate VAE and GMM based on the SERKET concept.  
+This is a Graphical Model of VAE+GMM model.:  
 
 <div>
 	<img src='/image/model.png' height="420px"><img src='/image/variable_define.png' width="420px">
 </div>
+
+VAE and GMM share the latent variable x.  
+x is a variable that follows a multivariate normal distribution and is estimated by VAE.  
+
+The training will be conducted in the following sequence.  
+1. VAE estimates latent variable（x） and sends latent variables（x） to GMM.   
+2. GMM clusters latent variables（x） sent from VAE and sends mean and variance parameters of the Gaussian distribution to VAE.  
+3. Return to 1 again.  
+
 
 # How to run
 You can train the VAE+GMM model by running `main.py`  
