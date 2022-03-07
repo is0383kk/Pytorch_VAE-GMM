@@ -1,6 +1,6 @@
 # Variational Auto-Encoder(VAE)+Gaussian mixture model(GMM)
 Implementation of mutual learning model between VAE and GMM.  
-This idea of integrating probability models is based on this paper: [Neuro-SERKET: Development of Integrative Cognitive System through the Composition of Deep Probabilistic Generative Models](https://arxiv.org/abs/1910.08918)  
+This idea of integrating probability models is based on this paper: [Neuro-SERKET: Development of Integrative Cognitive System through the Composition of Deep Probabilistic Generative Models](https://arxiv.org/abs/1910.08918).  
 Symbol Emergence in Robotics tool KIT（SERKET） is a framework that allows integration and partitioning of probabilistic generative models.  
 
 This is a Graphical Model of VAE+GMM model:  
@@ -19,9 +19,9 @@ The training will be conducted in the following sequence.
 
 
 # How to run
-You can train the VAE+GMM model by running `main.py`  
-- `train_model()` can be made to train VAE+GMM  
-- `decode_from_gmm_param()` makes image reconstruction from parameters of posterior distribution estimated by GMM
+You can train the VAE+GMM model by running `main.py`.  
+- `train_model()` can be made to train VAE+GMM.  
+- `decode_from_gmm_param()` makes image reconstruction from parameters of posterior distribution estimated by GMM.
 ```python:main.py
 def main():
     # training VAE+GMM model
@@ -38,7 +38,7 @@ def main():
                           model_dir=dir_name)
 ```
 
-You need to have pytorch >= v0.4.1 and cuda drivers installed  
+You need to have pytorch >= v0.4.1 and cuda drivers installed.  
 My environment is the following **Pytorch==1.5.1+cu101, CUDA==10.1**  
 
 
