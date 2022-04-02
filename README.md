@@ -17,6 +17,13 @@ The training will be conducted in the following sequence.
 2. GMM clusters latent variables（x） sent from VAE and sends mean and variance parameters of the Gaussian distribution to VAE.  
 3. Return to 1 again.  
 
+What this repo contains:
+- `main.py`: Main code for training model.
+- `vae_module.py`: A training program for VAE, running in main.py.
+- `gmm_module.py`: A training program for GMM, running in main.py.
+- `tool.py`: Various functions handled in the program.
+
+
 
 # How to run
 You can train the VAE+GMM model by running `main.py`.  
